@@ -1,6 +1,8 @@
 # Dockerfile
 FROM quay.io/aptible/ubuntu:14.04
 
+ENV DEBIAN_FRONTEND noninteractive
+
 RUN apt-get update \
   && apt-get install -y apt-transport-https \
   && rm -rf /var/lib/apt/lists/*
@@ -10,9 +12,15 @@ RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys C7A7DA52
 
 RUN apt-get update && apt-get -y install --allow-unauthenticated datadog-agent
 
-ADD postgres.yaml /etc/dd-agent/conf.d/
+# ADD app /app
 
-RUN sh -c "sed 's/api_key:.*/api_key: b50e73f1ab091424aaeabb8d32b8adbe/' /etc/dd-agent/datadog.conf.example > /etc/dd-agent/datadog.conf"
+RUN set -a && . /app/.aptible.env && sh -c "sed 's/api_key:.*/api_key: $DATADOGAPIKEY/' /etc/dd-agent/datadog.conf.example > /etc/dd-agent/datadog.conf"
+
+RUN set -a && . /app/.aptible.env && echo "init_config:\ninstances:\n  - host : $DBHOST\n    port : $DBPORT\n    username : $DBUSERNAME\n    password : $DBPASSWORD\n    ssl : True" > /etc/dd-agent/conf.d/postgres.yaml
+
+# ADD postgres.yaml /etc/dd-agent/conf.d/
+
+RUN set -a && . /app/.aptible.env && sh -c "sed 's/api_key:.*/api_key: $APIKEY/' /etc/dd-agent/datadog.conf.example > /etc/dd-agent/datadog.conf"
 RUN sh -c "sed -i 's/# apm_enabled: false/apm_enabled: true/' /etc/dd-agent/datadog.conf"
 
 EXPOSE 8126
