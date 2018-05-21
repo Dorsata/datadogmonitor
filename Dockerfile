@@ -23,7 +23,7 @@ RUN set -a && . /app/.aptible.env && echo "init_config:\ninstances:\n  - host : 
 
 # ADD postgres.yaml /etc/dd-agent/conf.d/
 
-RUN set -a && . /app/.aptible.env && sh -c "sed 's/api_key:.*/api_key: $APIKEY/' /etc/dd-agent/datadog.conf.example > /etc/dd-agent/datadog.conf"
+RUN set -a && . /app/.aptible.env && sh -c "sed 's/api_key:.*/api_key: $DATADOGAPIKEY/' /etc/dd-agent/datadog.conf.example > /etc/dd-agent/datadog.conf"
 RUN sh -c "sed -i 's/# apm_enabled: false/apm_enabled: true/' /etc/dd-agent/datadog.conf"
 
 EXPOSE 8126
