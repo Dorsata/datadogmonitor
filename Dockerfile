@@ -17,8 +17,6 @@ RUN apt-get update && apt-get -y install --allow-unauthenticated datadog-agent
 
 # ADD app /app
 
-RUN set -a && . /app/.aptible.env && sh -c "sed 's/api_key:.*/api_key: $DATADOGAPIKEY/' /etc/dd-agent/datadog.conf.example > /etc/dd-agent/datadog.conf"
-
 RUN set -a && . /app/.aptible.env && echo "init_config:\ninstances:\n  - host : $DBHOST\n    port : $DBPORT\n    username : $DBUSERNAME\n    password : $DBPASSWORD\n    ssl : True" > /etc/dd-agent/conf.d/postgres.yaml
 
 # ADD postgres.yaml /etc/dd-agent/conf.d/
