@@ -1,6 +1,9 @@
 # Dockerfile
 FROM quay.io/aptible/ubuntu:14.04
 
+ADD . /app
+WORKDIR /app
+
 ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get update \
