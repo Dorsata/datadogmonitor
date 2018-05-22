@@ -23,5 +23,6 @@ RUN set -a && . /app/.aptible.env && echo "init_config:\ninstances:\n  - host : 
 
 RUN set -a && . /app/.aptible.env && sh -c "sed 's/api_key:.*/api_key: $DATADOGAPIKEY/' /etc/dd-agent/datadog.conf.example > /etc/dd-agent/datadog.conf"
 RUN sh -c "sed -i 's/# apm_enabled: false/apm_enabled: true/' /etc/dd-agent/datadog.conf"
+RUN sh -c "sed -i 's/# bind_host: localhost/bind_host: 0.0.0.0/' /etc/dd-agent/datadog.conf"
 
 EXPOSE 8126
